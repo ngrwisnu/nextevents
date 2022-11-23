@@ -4,6 +4,7 @@ import EventContent from "../../components/event-detail/event-content";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventSummary from "../../components/event-detail/event-summary";
 import ErrorAlert from "../../components/ui/error-alert";
+import Comments from "../../components/input/comments";
 import { getEventById } from "../../dummy-data";
 
 function EventDetailPage() {
@@ -32,6 +33,7 @@ function EventDetailPage() {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={eventId} />
     </Fragment>
   );
 }
