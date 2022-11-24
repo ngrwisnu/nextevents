@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import { getAllDocuments } from "../../../helpers/db-util";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
@@ -41,12 +42,14 @@ async function handler(req, res) {
   }
 
   if (req.method === "GET") {
-    const dummyComment = [
-      { id: "c1", name: "John", comment: "This is a comment from John." },
-      { id: "c2", name: "Doe", comment: "This is a comment from Doe." },
-    ];
+    const documents = await getAllDocuments(
+      client,
+      "comments",
+      { _id: -1 },
+      { eventId }
+    );
 
-    res.status(200).json({ comments: dummyComment });
+    res.status(200).json({ comments: documents });
   }
 
   client.close();

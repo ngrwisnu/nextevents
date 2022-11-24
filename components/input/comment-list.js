@@ -6,25 +6,13 @@ function CommentList(props) {
     <ul className={classes.comments}>
       {/* Render list of comments - fetched from API */}
       {comments.map((comment) => (
-        <li key={comment.id}>
+        <li key={comment._id}>
           <p>{comment.comment}</p>
           <div>
             By <address>{comment.name}</address>
           </div>
         </li>
       ))}
-      <li>
-        <p>My comment is amazing!</p>
-        <div>
-          By <address>Maximilian</address>
-        </div>
-      </li>
-      <li>
-        <p>My comment is amazing!</p>
-        <div>
-          By <address>Maximilian</address>
-        </div>
-      </li>
     </ul>
   );
 }
