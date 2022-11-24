@@ -1,9 +1,18 @@
-function handler(req, res) {
+import { MongoClient } from "mongodb";
+
+async function handler(req, res) {
   const eventId = req.query.eventId;
+
+  // * connecting to MongoDB
+  const client = await MongoClient.connect(
+    "mongodb+srv://ngrwisnu:784ethSWoypkKec3@cluster0.zqdeejn.mongodb.net/db_events?retryWrites=true&w=majority"
+  );
+  const db = client.db();
 
   if (req.method === "POST") {
     const { email, name, comment } = req.body;
 
+    // ! validation
     if (
       !email.includes("@") ||
       !name ||
@@ -16,12 +25,15 @@ function handler(req, res) {
     }
 
     const newComment = {
-      id: Date.now().toString(),
+      eventId,
       email,
       name,
       comment,
     };
-    console.log(newComment);
+
+    const result = await db.collection("comments").insertOne(newComment);
+
+    newComment.id = result.insertedId;
 
     res
       .status(201)
@@ -36,6 +48,8 @@ function handler(req, res) {
 
     res.status(200).json({ comments: dummyComment });
   }
+
+  client.close();
 }
 
 export default handler;
