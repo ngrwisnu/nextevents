@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { connectDatabase, insertDocument } from "../../helpers/db-util";
 
 async function handler(req, res) {
   if (req.method === "POST") {
@@ -11,15 +11,21 @@ async function handler(req, res) {
     }
 
     // * connecting to MongoDB Atlas
-    const client = await MongoClient.connect(
-      "mongodb+srv://ngrwisnu:784ethSWoypkKec3@cluster0.zqdeejn.mongodb.net/db_events?retryWrites=true&w=majority"
-    );
+    let client;
+    try {
+      client = await connectDatabase();
+    } catch (error) {
+      res.status(500).json({ message: "Connecting failed!" });
+      return;
+    }
 
-    const db = client.db();
-
-    await db.collection("newsletter").insertOne({ email });
-
-    client.close();
+    try {
+      await insertDocument(client, "newsletter", { email });
+      client.close();
+    } catch (error) {
+      res.status(500).json({ message: "Inserting failed!" });
+      return;
+    }
 
     res.status(201).json({ message: "Signed up!" });
   }

@@ -1,9 +1,13 @@
 import { MongoClient } from "mongodb";
+import * as dotenv from "dotenv";
+dotenv.config();
+
+const username = process.env.DB_UNAME;
+const password = process.env.DB_PASSW;
+const url = `mongodb+srv://${username}:${password}@cluster0.zqdeejn.mongodb.net/db_events?retryWrites=true&w=majority`;
 
 export async function connectDatabase() {
-  const client = await MongoClient.connect(
-    "mongodb+srv://ngrwisnu:784ethSWoypkKec3@cluster0.zqdeejn.mongodb.net/db_events?retryWrites=true&w=majority"
-  );
+  const client = await MongoClient.connect(url);
 
   return client;
 }

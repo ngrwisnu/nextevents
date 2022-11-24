@@ -1,14 +1,15 @@
 import { MongoClient } from "mongodb";
-import { getAllDocuments } from "../../../helpers/db-util";
+import {
+  connectDatabase,
+  getAllDocuments,
+  insertDocument,
+} from "../../../helpers/db-util";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
 
   // * connecting to MongoDB
-  const client = await MongoClient.connect(
-    "mongodb+srv://ngrwisnu:784ethSWoypkKec3@cluster0.zqdeejn.mongodb.net/db_events?retryWrites=true&w=majority"
-  );
-  const db = client.db();
+  const client = await connectDatabase();
 
   if (req.method === "POST") {
     const { email, name, comment } = req.body;
@@ -32,7 +33,7 @@ async function handler(req, res) {
       comment,
     };
 
-    const result = await db.collection("comments").insertOne(newComment);
+    const result = await insertDocument(client, "comments", newComment);
 
     newComment.id = result.insertedId;
 
